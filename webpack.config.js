@@ -51,15 +51,15 @@ module.exports = {
 				pathRewrite: {
 					'/www\\.ecb\\.europa\\.eu' : ''
 				}
+			},
+			{
+				context: ["/xml.meteoservice.ru/"],
+				target: 'https://xml.meteoservice.ru',
+				changeOrigin: true,
+				pathRewrite: {
+					'/xml\\.meteoservice\\.ru' : ''
+				},
 			}
-			// {
-			// 	context: ["/xml.meteoservice.ru/"],
-			// 	target: 'https://xml.meteoservice.ru',
-			// 	changeOrigin: true,
-			// 	pathRewrite: {
-			// 		'/xml\\.meteoservice\\.ru' : ''
-			// 	},
-			// }
 		]
 	}
 };
