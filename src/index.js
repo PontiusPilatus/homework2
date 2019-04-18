@@ -1,9 +1,17 @@
 import "babel-polyfill";
 import Chart from "chart.js";
+import { ENODEV } from "constants";
 
-// const currencyURL = "www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
-const meteoURL = "/xml.meteoservice.ru/export/gismeteo/point/140.xml";
-
+let currencyURL;
+let meteoURL;
+if (process.env.NODE_ENV == "production") {
+  meteoURL = "https://xml.meteoservice.ru/export/gismeteo/point/140.xml";
+  // currencyURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+}
+if (process.env.NODE_ENV == "development") {
+  meteoURL = "/xml.meteoservice.ru/export/gismeteo/point/140.xml";
+  // currencyURL = "www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+}
 // Опции для отображения графика
 const options = {
   scales: {
@@ -25,8 +33,12 @@ const options = {
  * @param {Object} queryObj Объект ("ТЕГ" => ["аттрибуты"])
  */
 async function loadChartData(url, queryObj) {
-  const response = await fetch(url);
-  const responseBody = await response.text();
+  // const response = await fetch(url);
+  // const responseBody = await response.text();
+  const responseBody = await fetch(url)
+    .then((res) => res.text())
+    .then((data) => data);
+  
   const parsedDOM = new DOMParser().parseFromString(responseBody, "text/xml");
   
   // Составляем запрос для селектора
@@ -138,10 +150,8 @@ buttonBuild.addEventListener("click", async function() {
     }
     if (parseTime) {
       chart.options = options;
-      console.log(chartConfig.options)
     } else {
       chart.options = Object.create(null);
-      console.log(chartConfig.options)
     }
     chart.update({
       duration: 800,
