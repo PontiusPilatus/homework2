@@ -5,8 +5,9 @@ const currencyURL = 'www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
 // const meteoURL = '/xml.meteoservice.ru/export/gismeteo/point/140.xml';
 
 async function loadCurrency() {
-  const response = await fetch(currencyURL);
-  const xmlBody = await response.text();
+  const xmlBody = await fetch(currencyURL)
+    .then((res) => res.text())
+    .then((data) => data);
   const currencyData = new DOMParser().parseFromString(xmlBody, 'text/xml');
   const rates = currencyData.querySelectorAll('Cube[currency][rate]');
   const result = Object.create(null);
